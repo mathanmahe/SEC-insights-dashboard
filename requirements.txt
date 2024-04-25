@@ -1,0 +1,7 @@
+certifi==2024.2.2
+charset-normalizer==3.3.2
+idna==3.7
+pyrate-limiter==3.6.0
+requests==2.31.0
+sec-edgar-downloader==5.0.2
+urllib3==2.2.1
