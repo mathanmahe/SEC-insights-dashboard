@@ -59,3 +59,14 @@ Run the main program named `main.py`.
 ## Notes
 - Make sure you have proper permissions to scrape data from the SEC EDGAR database.
 - Be respectful of server limits and avoid overwhelming the SEC EDGAR servers with excessive requests.
+
+3. Current Dataset Breakdown:
+  AMZN Number of 10-K filings:  23
+  AAPL Number of 10-K filings:  27
+  WMT Number of 10-K filings:  29
+  TSLA Number of 10-K filings:  13
+  GOOGL Number of 10-K filings:  8
+  MSFT Number of 10-K filings:  29
+  META Number of 10-K filings:  11
+  NVDA Number of 10-K filings:  22
+  JPM Number of 10-K filings:  22
