@@ -78,6 +78,22 @@ class Preprocessor:
         tokens = word_tokenize(text)
         tokens = [self.lemmatizer.lemmatize(word) for word in tokens if word not in self.stop_words]
         return ' '.join(tokens)
+    
+    def preprocess_without_tokenize(self, text):
+        text = self.remove_html_tags(text)
+        # Remove all script and style elements
+
+        text = unidecode(text)  # Normalize Unicode characters
+        text = text.lower()  # Convert to lowercase
+        # Remove non-alphanumeric characters
+        text = re.sub(r'[^a-zA-Z0-9\s]', ' ', text)
+        
+        # text = re.sub(r'\d+', '', text)  # Remove numbers
+        text = self.clear_non_informative_strings(text)
+        # text = re.sub(r'[^\w\s]', ' ', text)  # Remove punctuation
+        # text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces with a single space
+
+        return text
 
 
 
@@ -92,24 +108,29 @@ if __name__ == "__main__":
     for company in os.listdir("data/sec-edgar-filings"):
         if company == ".DS_Store":
             continue
+        if company == "AMZN" or company == "AAPL":
+            continue
         print(company)
         SRC_DATA_PATH = f"{DATA_DIR}/sec-edgar-filings/{company}/10-K"
         DST_DATA_PATH = f"{CLEAN_DATA_DIR}/sec-edgar-filings/{company}/10-K"
-        print(SRC_DATA_PATH)
-        print(DST_DATA_PATH)
+
         for foldername in os.listdir(SRC_DATA_PATH):
             file_path = os.path.join(SRC_DATA_PATH, os.path.join(foldername, "full-submission.txt"))
+            if foldername == ".DS_Store":
+                continue
+
             with open(file_path, "r", encoding="utf-8") as file:
                 text = file.read()
                 preprocessed_text = preprocessor.preprocess_text(text)
 
                 os.makedirs(os.path.join(DST_DATA_PATH, foldername), exist_ok=True)
                 dst_file_path = os.path.join(DST_DATA_PATH, os.path.join(foldername, "full-submission.txt"))
+
+                print(file_path)
+                print(dst_file_path)
                 with open(dst_file_path, "w", encoding="utf-8") as dst_file:
                     dst_file.write(preprocessed_text)
                 
                 print(f"Preprocessed text saved to: {dst_file_path}")
-
-            break
 
 
