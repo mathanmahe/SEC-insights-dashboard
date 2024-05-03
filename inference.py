@@ -8,7 +8,7 @@ def query(payload, model_id, api_token):
     return response.json()
 
 model_id = "distilbert-base-uncased"
-api_token = "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" # get yours at hf.co/settings/tokens
+api_token = os.getenv("HF_TOKEN")
 # data = query("The goal of life is [MASK].", model_id, api_token)
 
 file_path = "clean/sec-edgar-filings/AAPL/10-K/0000320193-17-000070/full-submission.txt"
