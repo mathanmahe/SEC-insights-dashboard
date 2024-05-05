@@ -1,0 +1,31 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Financial Data Dashboard</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <header>
+        <input type="text" id="ticker" placeholder="Enter company ticker...">
+        <input type="number" id="year" placeholder="Enter year...">
+        <button onclick="loadData()">Load Data</button>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="#insights">Insights</a></li>
+            <li><a href="#visualizations">Visualizations</a></li>
+        </ul>
+    </nav>
+    <section id="insights" style="padding: 20px;">
+        <!-- Insights will be loaded here -->
+    </section>
+    <section id="visualizations" style="padding: 20px; display: flex; flex-wrap: wrap;">
+        <!-- Visualizations will be loaded here -->
+    </section>
+    <script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
