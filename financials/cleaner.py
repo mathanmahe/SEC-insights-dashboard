@@ -1,6 +1,7 @@
 
 from bs4 import BeautifulSoup
 import re
+import os
 
 def clean_html_table(html_content):
     soup = BeautifulSoup(html_content, 'html.parser')
@@ -8,14 +9,22 @@ def clean_html_table(html_content):
     item_pattern = re.compile(r'Item\s\d{1,2}[A-Za-z]?\.')
 
 
-    # Remove unwanted tags like <div>, <font>, and others
+    # Remove unwanted tags like <div>, <font>, and others 
+    # version 1 to remove everything except tables
     for tag in soup.find_all(['div', 'font', 'span', 'a', 'p']):
         tag.unwrap()  # This replaces the tag with its contents
+    # end version 1
 
-    #     # Check each <div> and unwrap it if it doesn't contain relevant item text
+    # version 2 that includes divs
+    # for tag in soup.find_all(['font', 'span', 'a', 'p']):
+    #     tag.unwrap()  # This replaces the tag with its contents
+
+    # # # Check each <div> and unwrap it if it doesn't contain relevant item text
     # for div in soup.find_all('div'):
     #     if not re.search(item_pattern, div.get_text(strip=True)):
     #         div.unwrap()
+
+    # end version 2
 
     # Remove style, class, and other attributes from all tags except for table, tr, and td
     for tag in soup.find_all(True):
@@ -52,6 +61,15 @@ def clean_html_whitespace(html_content):
 # Extracts the sections from a given 10-k containing all the tabular data
 def find_section_tables(soup, start_text, end_text):
     tables = soup.find_all('table')
+    # tables = []
+    
+    # for element in soup.find_all(['table', 'div']):
+    #     if element.name == 'table':
+    #         tables.append(element)
+    #     elif element.name == 'div' and is_relevant_div(element):
+    #         if not element.find('table') and is_relevant_div(element):
+    #             tables.append(element)
+
     start_index = None
     end_index = None
     count_start = 0
@@ -104,9 +122,23 @@ def is_relevant_div(tag):
     pattern = re.compile(r'Item\s\d{1,2}[A-Za-z]?\.')
     # Check if the text matches the item pattern
     return re.search(pattern, tag.get_text(strip=True)) is not None
+    
+    # # This regex matches items like "Item 1.", "Item 1A.", "Item 12.", "Item 12B."
+    # pattern = re.compile(r'Item\s\d{1,2}[A-Za-z]?\.')
+    # text = tag.get_text(strip=True)
+    # return bool(re.search(pattern, text))
+
+def save_html(html_text, folder_path, filename):
+    file_path = os.path.join(folder_path, filename)
+    with open(file_path, 'w') as output_file:
+        output_file.write(html_text)
+    
+    print(f"{filename} saved to {file_path}")
+
+
 
 # call this main function to extract tables, and get data in sections
-def clean_data(file_path):
+def clean_data(file_path, folder_path):
     with open(file_path, 'r') as file:
         text = file.read()
 
@@ -119,11 +151,22 @@ def clean_data(file_path):
     #     if element.name == 'table' or (element.name == 'div' and is_relevant_div(element)):
     #         tables.append(element)
 
-    all_tables_html = ''.join([table.prettify() for table in tables])
+    # for element in soup.find_all(['table', 'div']):
+    #     if element.name == 'table':
+    #         tables.append(element)
+    #     elif element.name == 'div' and is_relevant_div(element):
+    #         if not element.find('table') and is_relevant_div(element):
+    #             tables.append(element)
 
+    all_tables_html = ''.join([table.prettify() for table in tables])
+    save_html(all_tables_html,folder_path,"all_tables.html")
     
     cleaned_html = clean_html_table(all_tables_html)
+    save_html(cleaned_html,folder_path,"cleaned_html.html")
     cleaned_html = clean_html_whitespace(cleaned_html)
+    save_html(cleaned_html,folder_path,"cleaned_stripped_html.html")
+
+    
 
     soup = BeautifulSoup(cleaned_html, 'html.parser')
 

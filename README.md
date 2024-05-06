@@ -70,3 +70,7 @@ Run the main program named `main.py`.
   META Number of 10-K filings:  11
   NVDA Number of 10-K filings:  22
   JPM Number of 10-K filings:  22
+
+
+Django APP
+The backend contains a Django project named dashboardproject, with an app called financials.

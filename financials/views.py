@@ -100,7 +100,7 @@ def processSavedResponse(target_folder):
 
     print(file_path)
 
-    sections = cleaner.clean_data(file_path=file_path)
+    sections = cleaner.clean_data(file_path=file_path, folder_path=f"{target_folder}/{folder}/")
     results, financial_table = inferer.infer_data(sections[:2])
 
     # Save the results in a text file
